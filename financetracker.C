@@ -4,8 +4,428 @@
 #include <math.h>
 #include <string.h>
 #include <windows.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+char* month;
+char _income[20] = "";
+char month_1[20]= "";
+char _expense[20] = "";
+
+
+struct incomeSources {
+	char name[20];
+	float monay;
+	int id;	
+}in;
+
+struct expenseSources {
+	char name[20];
+	float monay;
+	int id;
+}ex;
+
+struct months {
+	float expense;
+	float income;
+	float saving;
+	
+}mot;
 
 void menu (int);
+void income (int);
+void expense (int);
+void savings (int);
+
+void choosemonth (int n) {
+	
+	
+	char ch;
+	int check;
+	
+	system ("cls");
+	
+	n==1 ? printf("\t=> "): printf("\t# ");
+	printf ("1. Baisakh\n");
+	
+	n==2 ? printf("\t=> "): printf("\t# ");
+	printf ("2. Jestha\n");
+	
+	n==3 ? printf("\t=> "): printf("\t# ");
+	printf ("3. Ashar\n");
+	
+	n==4 ? printf("\t=> "): printf("\t# ");
+	printf ("4. Shrawan\n");
+	
+	n==5 ? printf("\t=> "): printf("\t# ");
+	printf ("5. Bhadra\n");
+	
+	n==6 ? printf("\t=> "): printf("\t# ");
+	printf ("6. Ashwin\n");
+	
+	n==7 ? printf("\t=> "): printf("\t# ");
+	printf ("7. Kartik\n");
+	
+	n==8 ? printf("\t=> "): printf("\t# ");
+	printf ("8. Mangsir\n");
+	
+	n==9 ? printf("\t=> "): printf("\t# ");
+	printf ("9. Poush\n");
+	
+	n==10 ? printf("\t=> "): printf("\t# ");
+	printf ("10. Magh\n");
+	
+	n==11 ? printf("\t=> "): printf("\t# ");
+	printf ("11. Falgun\n");
+	
+	n==12 ? printf("\t=> "): printf("\t# ");
+	printf ("12. Chaitra\n");
+	
+	do {
+		ch = getch ();
+		switch (ch) {
+		case 119:
+			n-1 == 0 ? choosemonth (12): choosemonth (n-1);
+			break;
+		
+		case 115:
+			n+1 == 13 ? choosemonth (1): choosemonth (n+1);
+			break;
+		
+		case '\r':
+			switch (n) {
+				case 1:
+					check = mkdir ("Baisakh");
+					if (!check){
+						month = (char*) malloc(8*sizeof(char));
+				        month = "Baisakh";
+				        
+				        strcat(month_1, "Baisakh/main.txt");
+						strcat(_income, "Baisakh/income.txt");
+						strcat(_expense, "Baisakh/expense.txt");
+						
+						getch ();
+				        menu (1);
+				        break;
+					}
+					else {
+				        
+				        month = (char*) malloc(8*sizeof(char));
+						month = "Baisakh";
+						
+						strcat(month_1, "Baisakh/main.txt");
+						strcat(_income, "Baisakh/income.txt");
+						strcat(_expense, "Baisakh/expense.txt");
+						
+				        menu (1);
+				        break; 
+				    }
+				  
+				
+				case 2:
+					check = mkdir ("Jestha");
+					if (!check){
+						month = (char*) malloc(7*sizeof(char));
+				        month = "Jestha";
+				        
+				        strcat(month_1, "Jestha/main.txt");
+						strcat(_income, "Jestha/income.txt");
+						strcat(_expense, "Jestha/expense.txt");
+						
+				        menu (1);
+				    }
+					else {
+				        
+				        month = (char*) malloc(7*sizeof(char));
+						month = "Jestha";
+						
+						strcat(month_1, "Jestha/main.txt");
+						strcat(_income, "Jestha/income.txt");
+						strcat(_expense, "Jestha/expense.txt");
+						
+				        menu (1);
+					}
+				break;
+				
+				case 3:
+					check = mkdir ("Ashar");
+					if (!check){
+						month = (char*) malloc(6*sizeof(char));
+				        month = "Ashar";
+				        
+						strcat(month_1, "Ashar/main.txt");
+						strcat(_income, "Ashar/income.txt");
+						strcat(_expense, "Ashar/expense.txt");
+						
+				        menu (1);
+				    }
+					else {
+				        
+				        month = (char*) malloc(6*sizeof(char));
+						month = "Ashar";
+						
+						strcat(month_1, "Ashar/main.txt");
+						strcat(_income, "Ashar/income.txt");
+						strcat(_expense, "Ashar/expense.txt");
+						
+				        menu (1); 
+					}
+				break;
+				
+				case 4:
+					check = mkdir ("Shrawan");
+					if (!check){
+						month = (char*) malloc(8*sizeof(char));
+				        month = "Shrawan";
+				        
+						strcat(month_1, "Shrawan/main.txt");
+						strcat(_income, "Shrawan/income.txt");
+						strcat(_expense, "Shrawan/expense.txt");
+						
+				        menu (1);
+				    }
+					else {
+				        
+				        month = (char*) malloc(8*sizeof(char));
+						month = "Shrawan";
+						
+						strcat(month_1, "Shrawan/main.txt");
+						strcat(_income, "Shrawan/income.txt");
+						strcat(_expense, "Shrawan/expense.txt");
+						
+				        menu (1);
+					}
+				break;
+				
+				case 5:
+					check = mkdir ("Bhadra");
+					if (!check){
+						month = (char*) malloc(7*sizeof(char));
+				        month = "Bhadra";
+				        
+						strcat(month_1, "Bhadra/main.txt");
+						strcat(_income, "Bhadra/income.txt");
+						strcat(_expense, "Bhadra/expense.txt");
+						
+				        menu (1);
+				    }
+					else {
+				        
+				        month = (char*) malloc(7*sizeof(char));
+						month = "Bhadra";
+						
+						strcat(month_1, "Bhadra/main.txt");
+						strcat(_income, "Bhadra/income.txt");
+						strcat(_expense, "Bhadra/expense.txt");
+						
+				        menu (1); 
+					}
+				break;
+				
+				case 6:
+					check = mkdir ("Ashwin");
+					if (!check){
+						month = (char*) malloc(7*sizeof(char));
+				        month = "Ashwin";
+				        
+						strcat(month_1, "Ashwin/main.txt");
+						strcat(_income, "Ashwin/income.txt");
+						strcat(_expense, "Ashwin/expense.txt");
+						
+				        menu (1);
+				    }
+					else {
+				        
+				        month = (char*) malloc(7*sizeof(char));
+						month = "Ashwin";
+						
+						strcat(month_1, "Ashwin/main.txt");
+						strcat(_income, "Ashwin/income.txt");
+						strcat(_expense, "Ashwin/expense.txt");
+						
+				        menu (1); 
+					}
+				break;
+				
+				case 7:
+					check = mkdir ("Kartik");
+					if (!check){
+						month = (char*) malloc(7*sizeof(char));
+				        month = "Kartik";
+				        
+						strcat(month_1, "Kartik/main.txt");
+						strcat(_income, "Kartik/income.txt");
+						strcat(_expense, "Kartik/expense.txt");
+						
+				        menu (1);
+				    }
+					else {
+				        
+				        month = (char*) malloc(7*sizeof(char));
+						month = "Kartik";
+						
+						strcat(month_1, "Kartik/main.txt");
+						strcat(_income, "Kartik/income.txt");
+						strcat(_expense, "Kartik/expense.txt");
+						
+				        menu (1); 
+					}
+				break;
+				
+				case 8:
+					check = mkdir ("Mangsir");
+					if (!check){
+						month = (char*) malloc(8*sizeof(char));
+				        month = "Mangsir";
+				        
+						strcat(month_1, "Mangsir/main.txt");
+						strcat(_income, "Mangsir/income.txt");
+						strcat(_expense, "Mangsir/expense.txt");
+						
+				        menu (1);
+				    }
+					else {
+				        
+				        month = (char*) malloc(8*sizeof(char));
+						month = "Mangsir";
+						
+						strcat(month_1, "Mangsir/main.txt");
+						strcat(_income, "Mangsir/income.txt");
+						strcat(_expense, "Mangsir/expense.txt");
+						
+				        menu (1); 
+					}
+				break;
+				
+				case 9:
+					check = mkdir ("Poush");
+					if (!check){
+						month = (char*) malloc(6*sizeof(char));
+				        month = "Poush";
+				        
+						strcat(month_1, "Poush/main.txt");
+						strcat(_income, "Poush/income.txt");
+						strcat(_expense, "Poush/expense.txt");
+						
+				        menu (1);
+				    }
+					else {
+				        
+				        month = (char*) malloc(6*sizeof(char));
+						month = "Poush";
+						
+						strcat(month_1, "Poush/main.txt");
+						strcat(_income, "Poush/income.txt");
+						strcat(_expense, "Poush/expense.txt");
+						
+				        menu (1); 
+					}
+				break;
+				
+				case 10:
+					check = mkdir ("Magh");
+					if (!check){
+						month = (char*) malloc(5*sizeof(char));
+				        month = "Magh";
+				        
+						strcat(month_1, "Magh/main.txt");
+						strcat(_income, "Magh/income.txt");
+						strcat(_expense, "Magh/expense.txt");
+						
+				        menu (1);
+				    }
+					else {
+				        
+				        month = (char*) malloc(5*sizeof(char));
+						month = "Magh";
+						
+						strcat(month_1, "Magh/main.txt");
+						strcat(_income, "Magh/income.txt");
+						strcat(_expense, "Magh/expense.txt");
+						
+				        menu (1); 
+					}
+				break;
+				
+				case 11:
+					check = mkdir ("Falgun");
+					if (!check){
+						month = (char*) malloc(7*sizeof(char));
+				        month = "Falgun";
+				        
+						strcat(month_1, "Falgun/main.txt");
+						strcat(_income, "Falgun/income.txt");
+						strcat(_expense, "Falgun/expense.txt");
+						
+				        menu (1);
+				    }
+					else {
+				        
+				        month = (char*) malloc(7*sizeof(char));
+						month = "Falgun";
+						
+						strcat(month_1, "Falgun/main.txt");
+						strcat(_income, "Falgun/income.txt");
+						strcat(_expense, "Falgun/expense.txt");
+						
+				        menu (1); 
+					}
+				break;
+				
+				case 12:
+					check = mkdir ("Chaitra");
+					if (!check){
+						month = (char*) malloc(8*sizeof(char));
+				        month = "Chaitra";
+				        
+						strcat(month_1, "Chaitra/main.txt");
+						strcat(_income, "Chaitra/income.txt");
+						strcat(_expense, "Chaitra/expense.txt");
+						
+				        menu (1);
+				    }
+					else {
+				        
+				        month = (char*) malloc(8*sizeof(char));
+						month = "Chaitra";
+						
+						strcat(month_1, "Chaitra/main.txt");
+						strcat(_income, "Chaitra/income.txt");
+						strcat(_expense, "Chaitra/expense.txt");
+						
+				        menu (1);
+					}
+				break;
+				
+			}
+			break;
+		
+	}	
+	}while (true);
+}
+
+void getdata () {
+	FILE *f1;
+	f1 = fopen (month_1, "r");
+	
+	if (f1 == NULL) {
+		fclose (f1);
+		
+		f1 = fopen (month_1, "w");
+		mot.expense = 0; 
+		mot.income = 0;
+		mot.saving = 0;
+		
+		fwrite (&mot, sizeof(struct months), 1, f1);
+		
+		fclose (f1);
+	}
+	else {
+		fread (&mot, sizeof(struct months), 1, f1);
+		
+		fclose (f1);
+	}
+}
 
 void showtext (char text[100]) {
 	int len;
@@ -20,7 +440,7 @@ void animatestring (char text[100]) {
 	
 	printf ("\n\n\t");
 	
-	for (int i = 0; i <= 13; i++) {
+	for (int i = 0; i <= 8; i++) {
 		
 		system ("cls");
 		showtext (text);
@@ -61,29 +481,8 @@ void animatestring (char text[100]) {
 			case 8:
 				printf ("|");
 				break;
-				
-			case 9:
-				printf ("/");
-				break;
-				
-			case 10:
-				printf ("-");
-				break;
-				
-			case 11:
-				printf ("/");
-				break;
-				
-			case 12:
-				printf ("|");
-				break;
-				
-			case 13:
-				printf ("\\");
-				break;
-				
 		}
-		Sleep (300);
+		Sleep (100);
 	}
 }
 
@@ -122,7 +521,7 @@ int  password () {
 				
 				animatestring("Logged in ... Bonjour ");
 				
-				menu (1);
+				choosemonth (1);
 			}
 		
 		else {
@@ -172,14 +571,100 @@ void error () {
 			"\t\tEEEEEEEEEEEEEEEEEEEEEE rrrrrrr             rrrrrrr               ooooooooooo    rrrrrrr            \n");
 }
 
-void menubar () {
+void menubar () { 
 	//Total Income and Expense display at top//
-	printf ("\tNet Income: 50,000              Total Expense: 30,000\n\tSaved Amount: 20,000\n\n");
+	printf ("\tNet Income: %.2f              Total Expense: %.2f\n\tSaved Amount: %.2f\n\n", mot.income, mot.expense, mot.saving);
 }
 
-void incomesource (int n) {
+void incomesource () {
+	
+	struct incomeSources temp, temp2;
+	
+	system ("cls");	
+	
+	menubar ();
+	
+	FILE *fin, *fin1;
+	fin = fopen (_income, "a+");
+	fin1 = fopen (_income, "r");
+	
+	printf ("\n\tEnter Source Name: ");
+	scanf ("%s", &temp.name);
+	
+	printf ("\n\tEnter Amount: ");
+	scanf ("%f", &temp.monay);
+	
+	temp.id = 0;
+	
+	while (fread (&temp2, sizeof(struct incomeSources), 1, fin1)) {
+		temp.id = temp2.id;
+	}
+	
+	temp.id++;
+	
+	fwrite (&temp, sizeof(struct incomeSources), 1, fin);
+	fclose (fin);
+	
+	printf ("\n\t Data Successfully stored!\n\t Click Enter to go back.");
+	
+	getch ();
+	
+	income (1);
+}
+
+void editincomesource () {
+	
+	struct incomeSources temp;
+	int id;
+	
+	FILE *fin, *fin1;
+	fin = fopen (_income, "r");
+	fin1 = fopen ("temp.txt", "w");
+	
 	system ("cls");
-	printf ("You can edit income source");
+	
+	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
+		printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+	}
+	
+	fclose (fin);
+	
+	printf ("\n\n\tEnter id to edit: ");
+	scanf ("%d", &id);
+	
+	printf ("HI1");
+	fin = fopen (_income, "r");
+	
+	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {
+		printf ("HI2");
+		//Goes inside to edit data if id matches the input data//
+		if (temp.id == id) {
+			printf ("HI4");
+			//Shows the existing data//
+			printf("\n\tID: \t%d\n\tSource: \t%s\n\tAmount: \t%f", temp.id, temp.name, temp.monay);
+			printf ("\n\n\n\tEnter New Data:\n");
+			
+			//Enter New Source Name//
+			printf ("\nEnter new Name: ");
+			scanf ("%s", &temp.name);
+			
+			//Enter New Source Amount//
+			printf ("\nEnter new Amount: ");
+			scanf ("%f", &temp.monay);
+		}
+		
+		else {
+			printf ("%d", temp.id);
+		}
+		//Writes the new data from if and existing data from temp variable to temp file//
+		fwrite (&temp, sizeof(struct incomeSources), 1, fin1);
+	}
+	
+	fclose (fin1);
+	fclose (fin);
+	
+	
+		
 }
 
 void expensesource (int n) {
@@ -190,36 +675,55 @@ void expensesource (int n) {
 //Inside Income Menu//
 void income (int n) {
 	char ch;
+	struct incomeSources temp;
+	int loop = 1;
 	
 	system ("cls");
 	
 	menubar ();
+	
+	FILE *fin;
+	fin = fopen (_income, "r");
+	if (fin == NULL) {
+		fclose (fin);
+		
+		fin = fopen (_income, "w");
+		fclose (fin);
+	}
+	else {
+		while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
+			printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);
 			
-	printf ("\tSalary: \t30000 \n"
-			"\tCommission: \t5000 \n"
-			"\tInvestment: \t10000 \n"
-			"\tGift: \t\t5000 \n\n\n");
+		}
+		
+	}
 	
-	n==0 ? printf("\t=>"): printf("\t#");
+	n==1 ? printf("\t=>"): printf("\t#");	
+	printf ("1. Add source \n");
 	
-	printf ("0. Add custom source \n");
+	n==2 ? printf("\t=>"): printf("\t#");	
+	printf ("2. Edit source \n");
 	
 	do {
 		ch = getch ();
 		switch (ch) {
 		
-		case 27:
-			menu(1);
-			break;
+			case 27:
+				menu(1);
+				break;
+				
+			case 49:
+				income (1);
+				break;
 			
-		case 48:
-			income (0);
-			break;
-		
-		case '\r':
-			n == 0 ? incomesource(n): error ();
+			case 50:
+				income (2);
+				break;
 			
-	}	
+			case '\r':
+				loop = 0;
+				n == 1 ? incomesource(): n == 2? editincomesource(): error ();
+		}	
 	}while (true);
 }
 
@@ -232,10 +736,15 @@ void expense (int n) {
 	
 	menubar ();
 	
-	printf ("\tSalary: \t30000 \n"
-			"\tCommission: \t5000 \n"
-			"\tInvestment: \t10000 \n"
-			"\tGift: \t\t5000 \n\n\n");
+	printf ("\tFood: \t\t30000 \n"
+			"\tRent: \t\t5000 \n"
+			"\tMaintenance: \t10000 \n"
+			"\tGift: \t\t5000 \n"
+			"\tTravel: \t\t5000 \n"
+			"\tFuel: \t\t5000 \n"
+			"\tHealth: \t\t5000 \n"
+			"\tShopping: \t\t5000 \n"
+			"\tInvestment: \t\t5000 \n\n\n");
 	
 	n==0 ? printf("\t=>"): printf("\t#");
 	
@@ -312,6 +821,8 @@ void menu (int n) {
 			"\t\tMMMMMMMM               MMMMMMMM    eeeeeeeeeeeeee    nnnnnn    nnnnnn    uuuuuuuu  uuuu\n\n\n");
 	
 	
+	getdata ();
+	
 	menubar ();
 	
 	n==1 ? printf("\t=> "): printf("\t# ");
@@ -346,6 +857,9 @@ void menu (int n) {
 	
 }
 
+void spendinglimit () {
+	
+}
 
 
 int main() {
