@@ -631,15 +631,14 @@ void editincomesource () {
 	
 	printf ("\n\n\tEnter id to edit: ");
 	scanf ("%d", &id);
-	
-	printf ("HI1");
+
 	fin = fopen (_income, "r");
 	
 	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {
-		printf ("HI2");
+
 		//Goes inside to edit data if id matches the input data//
 		if (temp.id == id) {
-			printf ("HI4");
+			
 			//Shows the existing data//
 			printf("\n\tID: \t%d\n\tSource: \t%s\n\tAmount: \t%f", temp.id, temp.name, temp.monay);
 			printf ("\n\n\n\tEnter New Data:\n");
@@ -652,10 +651,7 @@ void editincomesource () {
 			printf ("\nEnter new Amount: ");
 			scanf ("%f", &temp.monay);
 		}
-		
-		else {
-			printf ("%d", temp.id);
-		}
+
 		//Writes the new data from if and existing data from temp variable to temp file//
 		fwrite (&temp, sizeof(struct incomeSources), 1, fin1);
 	}
@@ -663,8 +659,123 @@ void editincomesource () {
 	fclose (fin1);
 	fclose (fin);
 	
+	fin = fopen (_income, "w");
+	fin1 = fopen ("temp.txt", "r");
 	
+	while (fread (&temp, sizeof(struct incomeSources), 1, fin1)) {
+		fwrite (&temp, sizeof (struct incomeSources), 1, fin);
+	}
+	
+	fclose (fin1);
+	fclose (fin);
+	income (1);	
+}
+
+void addincomeamount () {
+	struct incomeSources temp;
+	int id;
+	float addmonay;
+	
+	FILE *fin, *fin1;
+	fin = fopen (_income, "r");
+	fin1 = fopen ("temp.txt", "w");
+	
+	system ("cls");
+	
+	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
+		printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+	}
+	
+	fclose (fin);
+	
+	printf ("\n\n\tEnter id to add amount: ");
+	scanf ("%d", &id);
+
+	fin = fopen (_income, "r");
+	
+	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {
+
+		//Goes inside to edit data if id matches the input data//
+		if (temp.id == id) {
+			
+			//Shows the existing data//
+			printf("\n\tID: \t%d\n\tSource: \t%s\n\tAmount: \t%f", temp.id, temp.name, temp.monay);
+			printf ("\n\n\n\tEnter New Data:\n");
+			
+			//Enter additional Amount//
+			printf ("\nEnter Amount: ");
+			scanf ("%f", &addmonay);
+			
+			temp.monay += addmonay;
+		}
+
+		//Writes the new data from if and existing data from temp variable to temp file//
+		fwrite (&temp, sizeof(struct incomeSources), 1, fin1);
+	}
+	
+	fclose (fin1);
+	fclose (fin);
+	
+	fin = fopen (_income, "w");
+	fin1 = fopen ("temp.txt", "r");
+	
+	while (fread (&temp, sizeof(struct incomeSources), 1, fin1)) {
+		fwrite (&temp, sizeof (struct incomeSources), 1, fin);
+	}
+	
+	fclose (fin1);
+	fclose (fin);
+	income (1);
+}
+
+void deleteincomesource () {
+	struct incomeSources temp;
+	int id, count;
+	
+	FILE *fin, *fin1;
+	fin = fopen (_income, "r");
+	fin1 = fopen ("temp.txt", "w");
+	
+	system ("cls");
+	
+	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
+		printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+	}
+	
+	fclose (fin);
+	
+	printf ("\n\n\tEnter id to delete: ");
+	scanf ("%d", &id);
+
+	fin = fopen (_income, "r");
+	
+	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {
+
+		//Goes inside to edit data if id matches the input data//
+		if (temp.id != id) {
+			
+			//Writes the new data from if and existing data from temp variable to temp file//
+			fwrite (&temp, sizeof(struct incomeSources), 1, fin1);
+		}
+	}
+	
+	fclose (fin1);
+	fclose (fin);
+	
+	fin = fopen (_income, "w");
+	fin1 = fopen ("temp.txt", "r");
+	
+	for (count = 1; fread (&temp, sizeof(struct incomeSources), 1, fin1); count++) {
+		temp.id = count;
 		
+		//Writes the data with new id after deletion//
+		fwrite (&temp, sizeof(struct incomeSources), 1, fin);
+	}
+	
+	fclose (fin1);
+	fclose (fin);
+//	resetincomeid ();
+	income (1);	
 }
 
 void expensesource (int n) {
@@ -704,6 +815,12 @@ void income (int n) {
 	n==2 ? printf("\t=>"): printf("\t#");	
 	printf ("2. Edit source \n");
 	
+	n==3 ? printf("\t=>"): printf("\t#");	
+	printf ("3. Add Amount \n");
+	
+	n==4 ? printf("\t=>"): printf("\t#");	
+	printf ("4. Delete source \n");
+	
 	do {
 		ch = getch ();
 		switch (ch) {
@@ -720,9 +837,17 @@ void income (int n) {
 				income (2);
 				break;
 			
+			case 51:
+				income (3);
+				break;
+			
+			case 52:
+				income (4);
+				break;
+			
 			case '\r':
 				loop = 0;
-				n == 1 ? incomesource(): n == 2? editincomesource(): error ();
+				n == 1 ? incomesource(): n == 2? editincomesource(): n == 3? addincomeamount () : n == 4? deleteincomesource (): error ();
 		}	
 	}while (true);
 }
@@ -860,7 +985,6 @@ void menu (int n) {
 void spendinglimit () {
 	
 }
-
 
 int main() {
 	
