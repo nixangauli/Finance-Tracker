@@ -38,6 +38,27 @@ struct user{
 	char pass[20];
 }usr,usr1;
 
+
+void red () {
+  printf("\033[1;31m");
+}
+void yellow() {
+  printf("\033[1;33m");
+};
+void green() {
+  printf("\033[0;32m");
+};
+void blue (){
+  printf("\033[0;34m");
+};
+void cyan (){
+  printf("\033[0;36m");
+};
+void white (){
+printf("\033[0;37m");
+};
+
+
 void menu (int);
 void income (int);
 void expense (int);
@@ -1166,14 +1187,17 @@ int requestLogin(){
 	int i;
 	FILE *fp;
 	fp = fopen("password.txt", "rb");
+	white();
 	if(fp != NULL){
 		printf("\n\tLOGIN\n\n");
 		fread(&usr, sizeof(struct user), 1, fp);
-				
+		green();
 		printf("\n\tEnter Username: ");
+		cyan();
 		scanf("%s", &usr1.username);
+		green();
 		printf("\n\tEnter Password: ");
-		
+		cyan();
 		ch = getch();
 		for(i = 0; ch!='\r'; i++){
 			usr1.pass[i] = ch;
