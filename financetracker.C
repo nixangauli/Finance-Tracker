@@ -12,13 +12,14 @@ char _income[20] = "";
 char month_1[20]= "";
 char _expense[20] = "";
 
-
+// structure data for income source name, money and its id //
 struct incomeSources {
 	char name[20];
 	float monay;
 	int id;	
 }in;
 
+// structure data for expense source name, money and its id //
 struct expenseSources {
 	char name[20];
 	float monay;
@@ -573,7 +574,7 @@ void error () {
 
 void menubar () { 
 	//Total Income and Expense display at top//
-	printf ("\tNet Income: %.2f              Total Expense: %.2f\n\tSaved Amount: %.2f\n\n", mot.income, mot.expense, mot.saving);
+	printf ("\tNet Income: %.2f              Total Expense: - %.2f\n\tSaved Amount: %.2f\n\n", mot.income, mot.expense, mot.saving);
 }
 
 void incomesource () {
@@ -778,13 +779,213 @@ void deleteincomesource () {
 	income (1);	
 }
 
-void expensesource (int n) {
+void expensesource () {
+	
+	struct expenseSources temp, temp2;
+	
+	system ("cls");	
+	
+	menubar ();
+	
+	FILE *fex, *fex1;
+	fex = fopen (_expense, "a+");
+	fex1 = fopen (_expense, "r");
+	
+	printf ("\n\tEnter Source Name: ");
+	scanf ("%s", &temp.name);
+	
+	printf ("\n\tEnter Amount: ");
+	scanf ("%f", &temp.monay);
+	
+	temp.id = 0;
+	
+	while (fread (&temp2, sizeof(struct expenseSources), 1, fex1)) {
+		temp.id = temp2.id;
+	}
+	
+	temp.id++;
+	
+	fwrite (&temp, sizeof(struct expenseSources), 1, fex);
+	fclose (fex);
+	
+	printf ("\n\t Data Successfully stored!\n\t Click Enter to go back.");
+	
+	getch ();
+	
+	expense (1);
+}
+
+void editexpensesource () {
+	
+	struct expenseSources temp;
+	int id;
+	
+	FILE *fex, *fex1;
+	fex = fopen (_expense, "r");
+	fex1 = fopen ("temp.txt", "w");
+	
 	system ("cls");
-	printf ("You can edit expense source");
+	
+	while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {		
+		printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+	}
+	
+	fclose (fex);
+	
+	printf ("\n\n\tEnter id to edit: ");
+	scanf ("%d", &id);
+
+	fex = fopen (_expense, "r");
+	
+	while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {
+
+		//Goes inside to edit data if id matches the input data//
+		if (temp.id == id) {
+			
+			//Shows the existing data//
+			printf("\n\tID: \t%d\n\tSource: \t%s\n\tAmount: \t%f", temp.id, temp.name, temp.monay);
+			printf ("\n\n\n\tEnter New Data:\n");
+			
+			//Enter New Source Name//
+			printf ("\nEnter new Name: ");
+			scanf ("%s", &temp.name);
+			
+			//Enter New Source Amount//
+			printf ("\nEnter new Amount: ");
+			scanf ("%f", &temp.monay);
+		}
+
+		//Writes the new data from if and existing data from temp variable to temp file//
+		fwrite (&temp, sizeof(struct expenseSources), 1, fex1);
+	}
+	
+	fclose (fex1);
+	fclose (fex);
+	
+	fex = fopen (_expense, "w");
+	fex1 = fopen ("temp.txt", "r");
+	
+	while (fread (&temp, sizeof(struct expenseSources), 1, fex1)) {
+		fwrite (&temp, sizeof (struct incomeSources), 1, fex);
+	}
+	
+	fclose (fex1);
+	fclose (fex);
+	expense (1);
+}
+
+void addexpenseamount () {
+	struct expenseSources temp;
+	int id;
+	float addmonay;
+	
+	FILE *fex, *fex1;
+	fex = fopen (_expense, "r");
+	fex1 = fopen ("temp.txt", "w");
+	
+	system ("cls");
+	
+	while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {		
+		printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+	}
+	
+	fclose (fex);
+	
+	printf ("\n\n\tEnter id to add amount: ");
+	scanf ("%d", &id);
+
+	fex = fopen (_expense, "r");
+	
+	while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {
+
+		//Goes inside to edit data if id matches the input data//
+		if (temp.id == id) {
+			
+			//Shows the existing data//
+			printf("\n\tID: \t%d\n\tSource: \t%s\n\tAmount: \t%f", temp.id, temp.name, temp.monay);
+			printf ("\n\n\n\tEnter New Data:\n");
+			
+			//Enter additional Amount//
+			printf ("\nEnter Amount: ");
+			scanf ("%f", &addmonay);
+			
+			temp.monay += addmonay;
+		}
+
+		//Writes the new data from if and existing data from temp variable to temp file//
+		fwrite (&temp, sizeof(struct expenseSources), 1, fex1);
+	}
+	
+	fclose (fex1);
+	fclose (fex);
+	
+	fex = fopen (_expense, "w");
+	fex1 = fopen ("temp.txt", "r");
+	
+	while (fread (&temp, sizeof(struct expenseSources), 1, fex1)) {
+		fwrite (&temp, sizeof (struct expenseSources), 1, fex);
+	}
+	
+	fclose (fex1);
+	fclose (fex);
+	expense (1);
+}
+
+void deleteexpensesource () {
+	
+	struct expenseSources temp;
+	int id, count;
+	
+	FILE *fex, *fex1;
+	fex = fopen (_expense, "r");
+	fex1 = fopen ("temp.txt", "w");
+	
+	system ("cls");
+	
+	while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {		
+		printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+	}
+	
+	fclose (fex);
+	
+	printf ("\n\n\tEnter id to delete: ");
+	scanf ("%d", &id);
+
+	fex = fopen (_expense, "r");
+	
+	while (fread (&temp, sizeof(struct incomeSources), 1, fex)) {
+
+		//Goes inside to edit data if id matches the input data//
+		if (temp.id != id) {
+			
+			//Writes the new data from if and existing data from temp variable to temp file//
+			fwrite (&temp, sizeof(struct incomeSources), 1, fex1);
+		}
+	}
+	
+	fclose (fex1);
+	fclose (fex);
+	
+	fex = fopen (_expense, "w");
+	fex1 = fopen ("temp.txt", "r");
+	
+	for (count = 1; fread (&temp, sizeof(struct expenseSources), 1, fex1); count++) {
+		temp.id = count;
+		
+		//Writes the data with new id after deletion//
+		fwrite (&temp, sizeof(struct expenseSources), 1, fex);
+	}
+	
+	fclose (fex1);
+	fclose (fex);
+	
+//	resetexpenseid ();
+	expense (1);	
 }
 
 //Inside Income Menu//
 void income (int n) {
+	
 	char ch;
 	struct incomeSources temp;
 	int loop = 1;
@@ -801,6 +1002,7 @@ void income (int n) {
 		fin = fopen (_income, "w");
 		fclose (fin);
 	}
+	
 	else {
 		while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
 			printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);
@@ -849,48 +1051,80 @@ void income (int n) {
 				loop = 0;
 				n == 1 ? incomesource(): n == 2? editincomesource(): n == 3? addincomeamount () : n == 4? deleteincomesource (): error ();
 		}	
-	}while (true);
+	}while (1);
 }
 
 //Inside Expense Menu//
 void expense (int n) {
 	
 	char ch;
+	struct expenseSources temp;
+	int loop = 1;
 	
 	system ("cls");
 	
 	menubar ();
 	
-	printf ("\tFood: \t\t30000 \n"
-			"\tRent: \t\t5000 \n"
-			"\tMaintenance: \t10000 \n"
-			"\tGift: \t\t5000 \n"
-			"\tTravel: \t\t5000 \n"
-			"\tFuel: \t\t5000 \n"
-			"\tHealth: \t\t5000 \n"
-			"\tShopping: \t\t5000 \n"
-			"\tInvestment: \t\t5000 \n\n\n");
+	FILE *fex;
+	fex = fopen (_expense, "r");
+	if (fex == NULL) {
+		fclose (fex);
+		
+		fex = fopen (_expense, "w");
+		fclose (fex);
+	}
 	
-	n==0 ? printf("\t=>"): printf("\t#");
+	else {
+		while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {
+			
+			printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+			
+		}
+		
+	}
 	
-	printf ("0. Add custom source \n");
+	n==1 ? printf("\t=>"): printf("\t#");	
+	printf ("1. Add source \n");
+	
+	n==2 ? printf("\t=>"): printf("\t#");	
+	printf ("2. Edit source \n");
+	
+	n==3 ? printf("\t=>"): printf("\t#");	
+	printf ("3. Add Amount \n");
+	
+	n==4 ? printf("\t=>"): printf("\t#");	
+	printf ("4. Delete source \n");
 	
 	do {
 		ch = getch ();
 		switch (ch) {
 		
-		case 27:
-			menu(1);
-			break;
-		
-		case 48:
-			expense (0);
-			break;
-		
-		case '\r':
-			n == 0 ? expensesource(n): error ();
-	}	
-	}while (true);
+			case 27:
+				menu(1);
+				break;
+				
+			case 49:
+				expense (1);
+				break;
+			
+			case 50:
+				expense (2);
+				break;
+			
+			case 51:
+				expense (3);
+				break;
+			
+			case 52:
+				expense (4);
+				break;
+			
+			case '\r':
+				loop = 0;
+				n == 1 ? expensesource (): n == 2? editexpensesource (): n == 3? addexpenseamount () : n == 4? deleteexpensesource (): error ();
+		}	
+	}while (1);
+	
 }
 
 //Inside Savings Menu//
@@ -978,17 +1212,19 @@ void menu (int n) {
 			n == 1 ? income(n): n == 2 ? expense (n): n == 3 ? savings (n) : error ();
 			break;
 	}	
-	}while (true);
+	}while (1);
 	
 }
 
+// A user set value to limit the spending of user //
 void spendinglimit () {
 	
 }
 
+
 int main() {
 	
-	password ();
+	password (); // Goes to password function for security //
 	
 	return 0;
 }
