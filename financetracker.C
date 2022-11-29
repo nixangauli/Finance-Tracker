@@ -33,6 +33,11 @@ struct months {
 	
 }mot;
 
+struct user{
+	char username[20];
+	char pass[20];
+}usr,usr1;
+
 void menu (int);
 void income (int);
 void expense (int);
@@ -487,71 +492,6 @@ void animatestring (char text[100]) {
 	}
 }
 
-int  password () {
-	char user[20];
-	char pwd[20];
-	char ch;
-	int passhide;
-	
-	printf ("          -------------Finance Tracker---------------            \n\n");
-	
-	printf("\n\tEnter Username : ");
-	scanf("%s",&user);
-	printf("\n\tEnter Secret Key : ");
-	
-	for(passhide=0; passhide <= 20; passhide++) {
-					
-		ch = getch();
-		
-		if (ch == '\r') {
-			break;
-		}
-		
-		pwd[passhide] = ch;
-		ch = '*' ;
-					
-		printf("%c",ch);
-	}
-
-	
-	if(strcmp(user,"nixan")==0)
-	{
-		if(strcmp(pwd,"12345678")==0)
-			{		
-				system ("cls");
-				
-				animatestring("Logged in ... Bonjour ");
-				
-				choosemonth (1);
-			}
-		
-		else {
-			printf("\n\n\t\tINKORREKT credentials....\n\t\tPress Enter to Try Again.\n");
-		
-			getch ();
-		
-			system ("cls");
-		
-			password ();
-		}
-	}
-	
-	else
-	{
-		printf("\n\n\t\tINKORREKT credentials....\n\t\tPress Enter to Try Again.\n");
-		
-		getch ();
-		
-		system ("cls");
-		
-		password ();
-	}
-	
-	getch();
-	return 0;
-}
-
-// Error Page //
 void error () {
 	printf ("\n\n"                                                                                                   
 			"\t\tEEEEEEEEEEEEEEEEEEEEEE                                                                             \n"
@@ -1221,11 +1161,69 @@ void spendinglimit () {
 	
 }
 
+int requestLogin(){
+	char ch;
+	int i;
+	FILE *fp;
+	fp = fopen("password.txt", "rb");
+	if(fp != NULL){
+		printf("\n\tLOGIN\n\n");
+		fread(&usr, sizeof(struct user), 1, fp);
+				
+		printf("\n\tUsername:\t");
+		scanf("%s", &usr1.username);
+		printf("\n\n\tPassword:\t");
+		
+		ch = getch();
+		for(i = 0; ch!='\r'; i++){
+			usr1.pass[i] = ch;
+			printf("*");
+			ch = getch();
+		}
+		
+		if(strcmp(usr1.pass, usr.pass) == 0 && strcmp(usr1.username, usr.username) == 0){
+			printf("\n\n\tSuccessfully Logged In!\n\tpress any key to continue...");
+			getch();
+			return 1;
+			
+		}else{
+			printf("\nPassword Incorrect!\n press any key to try again...");
+			return 0;
+			
+		}
+	}else{
+		printf("\n\tREGISTER\n\n");
+		printf("\tLets register your account");
+		fclose(fp);
+		fp = fopen("password.txt", "wb");
+		
+		printf("\n\tUsername:\t");
+		scanf("\t%s", &usr.username);
+		printf("\n\n\tPassword:\t");
+		
+		ch = getch();
+		for(i = 0; ch!='\r'; i++){
+			usr.pass[i] = ch;
+			printf("*");
+			ch = getch();
+		}
 
+		fwrite(&usr, sizeof(struct user), 1, fp);
+		fclose(fp);
+		printf("\nRegister successfull! try logging in again....");
+		return 0;
+	}
+}
 int main() {
-	
-	password (); // Goes to password function for security //
-	
+	int loginCheck;
+	askAgain:	
+    system("cls");
+	loginCheck = requestLogin();   
+    if(!loginCheck){
+		goto askAgain;
+	}
+	//password (); // Goes to password function for security //
+	choosemonth(1);
 	return 0;
 }
 
