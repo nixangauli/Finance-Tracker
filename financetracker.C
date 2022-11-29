@@ -1149,7 +1149,7 @@ void menu (int n) {
 			break;
 		
 		case '\r':
-			n == 1 ? income(n): n == 2 ? expense (n): n == 3 ? savings (n) : error ();
+			n == 1 ? income(1): n == 2 ? expense (1): n == 3 ? savings (1) : error ();
 			break;
 	}	
 	}while (1);
@@ -1170,9 +1170,9 @@ int requestLogin(){
 		printf("\n\tLOGIN\n\n");
 		fread(&usr, sizeof(struct user), 1, fp);
 				
-		printf("\n\tUsername:\t");
+		printf("\n\tEnter Username: ");
 		scanf("%s", &usr1.username);
-		printf("\n\n\tPassword:\t");
+		printf("\n\tEnter Password: ");
 		
 		ch = getch();
 		for(i = 0; ch!='\r'; i++){
@@ -1181,16 +1181,24 @@ int requestLogin(){
 			ch = getch();
 		}
 		
-		if(strcmp(usr1.pass, usr.pass) == 0 && strcmp(usr1.username, usr.username) == 0){
-			printf("\n\n\tSuccessfully Logged In!\n\tpress any key to continue...");
-			getch();
-			return 1;
-			
-		}else{
-			printf("\nPassword Incorrect!\n press any key to try again...");
+		if(strcmp(usr1.pass, usr.pass) == 0 && strcmp(usr1.username, usr.username) == 0)
+			{
+				system ("cls");
+							
+				animatestring("Logged in ... Bonjour ");
+				
+				return 1;
+			}
+		
+		else {
+			printf("\n\n\t\tINKORREKT credentials....\n\t\tPress Enter to Try Again.\n");
+				
+			getch ();
+				
+			system ("cls");
 			return 0;
-			
 		}
+		
 	}else{
 		printf("\n\tREGISTER\n\n");
 		printf("\tLets register your account");
@@ -1222,9 +1230,7 @@ int main() {
     if(!loginCheck){
 		goto askAgain;
 	}
-	//password (); // Goes to password function for security //
+
 	choosemonth(1);
 	return 0;
 }
-
-// hi guys this is finance tracker //
