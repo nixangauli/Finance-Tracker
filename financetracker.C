@@ -65,6 +65,7 @@ void income (int);
 void expense (int);
 void savings (int);
 void choosemonth(int n);
+
 void addRow(int n){
 	FILE *fp;
 	char _month[20]="";
@@ -123,7 +124,7 @@ void addRow(int n){
 	
 	if(fp != NULL){
 		fread(&mot, sizeof(struct months), 1,fp);
-		printf("\t%s\t\t\t%.3f\t\t%.3f\t\t%.3f\n", name, mot.income, mot.expense, mot.income-mot.expense);
+		printf("\t%s\t\t\t%.3f\t%.3f\t%.3f\n", name, mot.income, mot.expense, mot.income-mot.expense);
 	}
 }
 
@@ -147,7 +148,9 @@ void generatereport () {
 		goto reset;
 	}
 	else {
+		yellow ();
 		printf("\n\tSN.\tMonth\t\t\tIncome\t\tExpense\t\tSaving\n\n");
+		white ();
 		for(i = 0; i<=end-start; i++){
 			printf("\t%d", i+1);
 			addRow(start+i);
@@ -211,11 +214,15 @@ void choosemonth (int n) {
 	n==13 ? printf("\t=> "): printf("\t# ");
 	printf ("a. Generate Report\n");
 	
+	blue ();
+	printf ("\n\n\n\tUse W or S button to navigate up or down respectively.");
+	white();
+	
 	do {
 		ch = getch ();
 		switch (ch) {
 		case 119:
-			n-1 == 0 ? choosemonth (12): choosemonth (n-1);
+			n-1 == 0 ? choosemonth (13): choosemonth (n-1);
 			break;
 		
 		case 115:
@@ -857,11 +864,11 @@ void editincomesource () {
 			printf ("\n\n\n\tEnter New Data:\n");
 			
 			//Enter New Source Name//
-			printf ("\nEnter new Name: ");
+			printf ("\n\tEnter new Name: ");
 			scanf ("%s", &temp.name);
 			
 			//Enter New Source Amount//
-			printf ("\nEnter new Amount: ");
+			printf ("\n\tEnter new Amount: ");
 			scanf ("%f", &temp.monay);
 		}
 
@@ -1237,6 +1244,10 @@ void income (int n) {
 	n==4 ? printf("\t=>"): printf("\t#");	
 	printf ("4. Delete source \n");
 	
+	blue ();
+	printf ("\n\n\n\tUse the numbers respective to the action to navigate.");
+	white();
+	
 	do {
 		ch = getch ();
 		switch (ch) {
@@ -1310,6 +1321,10 @@ void expense (int n) {
 	
 	n==4 ? printf("\t=>"): printf("\t#");	
 	printf ("4. Delete source \n");
+	
+	blue ();
+	printf ("\n\n\n\tUse the numbers respective to the action to navigate.");
+	white();
 	
 	do {
 		ch = getch ();
@@ -1405,6 +1420,10 @@ void menu (int n) {
 	
 	n==3 ? printf("\t=> "): printf("\t# ");
 	printf ("3. Savings\n");
+	
+	blue ();
+	printf ("\n\n\n\tUse the numbers respective to the action to navigate.");
+	white();
 	
 	do {
 		ch = getch ();
