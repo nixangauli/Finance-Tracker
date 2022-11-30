@@ -38,7 +38,7 @@ struct user{
 	char pass[20];
 }usr,usr1;
 
-
+// Color Coding //
 void red () {
   printf("\033[1;31m");
 }
@@ -57,7 +57,6 @@ void cyan (){
 void white (){
 printf("\033[0;37m");
 };
-
 
 void menu (int);
 void income (int);
@@ -431,7 +430,35 @@ void choosemonth (int n) {
 	}while (true);
 }
 
+void updatemonth () {
+	FILE *f1, *f2, *f3;
+	struct incomeSources temp;
+	struct expenseSources temp2;
+	
+	f1 = fopen (_income, "r");
+	f2 = fopen (_expense, "r");
+	f3 = fopen (month_1, "w");
+	
+	mot.income = 0;  // resets income data in menubar //
+	mot.expense = 0;  // resets expense data in menubar //
+	
+	while (fread (&temp, sizeof(struct incomeSources), 1, f1)) {
+		mot.income += temp.monay;
+	}
+	
+	while (fread (&temp2, sizeof(struct expenseSources), 1, f2)) {
+		mot.expense += temp2.monay;
+	}
+	
+	fwrite (&mot, sizeof (struct months), 1, f3);
+	fclose (f1);
+	fclose (f2);
+	fclose (f3);
+}
+
 void getdata () {
+
+
 	FILE *f1;
 	f1 = fopen (month_1, "r");
 	
@@ -535,7 +562,22 @@ void error () {
 
 void menubar () { 
 	//Total Income and Expense display at top//
-	printf ("\tNet Income: %.2f              Total Expense: - %.2f\n\tSaved Amount: %.2f\n\n", mot.income, mot.expense, mot.saving);
+	updatemonth ();
+	getdata ();
+	
+	white ();
+	printf ("\tNet Income: ");
+	green ();
+	printf ("%.3f", mot.income);
+	white ();
+	printf ("\tNet Expense: ");
+	red ();
+	printf ("%.3f", mot.expense);
+	white ();
+	printf ("\n\tSaved Amount: ");
+	cyan ();
+	printf ("%.3f\n\n", mot.income - mot.expense);
+	white ();
 }
 
 void incomesource () {
@@ -565,6 +607,7 @@ void incomesource () {
 	temp.id++;
 	
 	fwrite (&temp, sizeof(struct incomeSources), 1, fin);
+	
 	fclose (fin);
 	
 	printf ("\n\t Data Successfully stored!\n\t Click Enter to go back.");
@@ -586,7 +629,7 @@ void editincomesource () {
 	system ("cls");
 	
 	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
-		printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+		printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
 	}
 	
 	fclose (fin);
@@ -645,7 +688,7 @@ void addincomeamount () {
 	system ("cls");
 	
 	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
-		printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+		printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
 	}
 	
 	fclose (fin);
@@ -665,7 +708,7 @@ void addincomeamount () {
 			printf ("\n\n\n\tEnter New Data:\n");
 			
 			//Enter additional Amount//
-			printf ("\nEnter Amount: ");
+			printf ("\n\tEnter Amount: ");
 			scanf ("%f", &addmonay);
 			
 			temp.monay += addmonay;
@@ -701,7 +744,7 @@ void deleteincomesource () {
 	system ("cls");
 	
 	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
-		printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+		printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
 	}
 	
 	fclose (fin);
@@ -788,7 +831,7 @@ void editexpensesource () {
 	system ("cls");
 	
 	while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {		
-		printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+		printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
 	}
 	
 	fclose (fex);
@@ -808,11 +851,11 @@ void editexpensesource () {
 			printf ("\n\n\n\tEnter New Data:\n");
 			
 			//Enter New Source Name//
-			printf ("\nEnter new Name: ");
+			printf ("\n\tEnter new Name: ");
 			scanf ("%s", &temp.name);
 			
 			//Enter New Source Amount//
-			printf ("\nEnter new Amount: ");
+			printf ("\n\tEnter new Amount: ");
 			scanf ("%f", &temp.monay);
 		}
 
@@ -847,7 +890,7 @@ void addexpenseamount () {
 	system ("cls");
 	
 	while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {		
-		printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+		printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
 	}
 	
 	fclose (fex);
@@ -867,7 +910,7 @@ void addexpenseamount () {
 			printf ("\n\n\n\tEnter New Data:\n");
 			
 			//Enter additional Amount//
-			printf ("\nEnter Amount: ");
+			printf ("\n\tEnter Amount: ");
 			scanf ("%f", &addmonay);
 			
 			temp.monay += addmonay;
@@ -904,7 +947,7 @@ void deleteexpensesource () {
 	system ("cls");
 	
 	while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {		
-		printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+		printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
 	}
 	
 	fclose (fex);
@@ -966,11 +1009,13 @@ void income (int n) {
 	
 	else {
 		while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
-			printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);
+			printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);
 			
 		}
 		
 	}
+	
+	printf ("\n\n");
 	
 	n==1 ? printf("\t=>"): printf("\t#");	
 	printf ("1. Add source \n");
@@ -1038,11 +1083,13 @@ void expense (int n) {
 	else {
 		while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {
 			
-			printf ("\n\t%d. %s :\t%f\n", temp.id, temp.name, temp.monay);	
+			printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
 			
 		}
 		
 	}
+	
+	printf ("\n\n");
 	
 	n==1 ? printf("\t=>"): printf("\t#");	
 	printf ("1. Add source \n");
@@ -1199,12 +1246,14 @@ int requestLogin(){
 		printf("\n\tEnter Password: ");
 		cyan();
 		ch = getch();
+		
 		for(i = 0; ch!='\r'; i++){
 			usr1.pass[i] = ch;
 			printf("*");
 			ch = getch();
 		}
 		
+		white ();
 		if(strcmp(usr1.pass, usr.pass) == 0 && strcmp(usr1.username, usr.username) == 0)
 			{
 				system ("cls");
@@ -1229,10 +1278,14 @@ int requestLogin(){
 		fclose(fp);
 		fp = fopen("password.txt", "wb");
 		
-		printf("\n\tUsername:\t");
+		green ();
+		printf("\n\tEnter Username:\t");
+		cyan ();
 		scanf("\t%s", &usr.username);
-		printf("\n\n\tPassword:\t");
+		green ();
+		printf("\n\tEnter Password:\t");
 		
+		cyan ();
 		ch = getch();
 		for(i = 0; ch!='\r'; i++){
 			usr.pass[i] = ch;
@@ -1242,15 +1295,21 @@ int requestLogin(){
 
 		fwrite(&usr, sizeof(struct user), 1, fp);
 		fclose(fp);
-		printf("\nRegister successfull! try logging in again....");
+		green ();
+		animatestring("\n\tRegister successfull! try logging in again....");
 		return 0;
 	}
 }
+
 int main() {
 	int loginCheck;
-	askAgain:	
+	
+	askAgain:
+		
     system("cls");
+    
 	loginCheck = requestLogin();   
+	
     if(!loginCheck){
 		goto askAgain;
 	}
