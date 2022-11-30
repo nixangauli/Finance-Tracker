@@ -64,9 +64,71 @@ void menu (int);
 void income (int);
 void expense (int);
 void savings (int);
+void choosemonth(int n);
+void addRow(int n){
+	FILE *fp;
+	char _month[20]="";
+	char name[20]="";
+	if(n==1){
+		strcat(_month, "Baisakh/main.txt");
+		strcat(name, "Baisakh");
+	}
+	if(n==2){
+		strcat(_month, "Jestha/main.txt");
+		strcat(name, "Jestha");
+	}
+	if(n==3){
+		strcat(_month, "Ashar/main.txt");
+		strcat(name, "Ashar");
+	}
+	if(n==4){
+		strcat(_month, "Shrawan/main.txt");
+		strcat(name, "Shrawan");
+	}
+	if(n==5){
+		strcat(_month, "Bhadra/main.txt");
+		strcat(name, "Bhadra");
+	}
+	if(n==6){
+		strcat(_month, "Ashwin/main.txt");
+		strcat(name, "Ashwin");
+	}
+	if(n==7){
+		strcat(_month, "Kartik/main.txt");
+		strcat(name, "Kartik");
+	}
+	if(n==8){
+		strcat(_month, "Mangsir/main.txt");
+		strcat(name, "Mangsir");
+	}
+	if(n==9){
+		strcat(_month, "Poush/main.txt");
+		strcat(name, "Poush");
+	}
+	if(n==10){
+		strcat(_month, "Magh/main.txt");
+		strcat(name, "Magh");
+	}
+	if(n==11){
+		strcat(_month, "Falgun/main.txt");
+		strcat(name, "Falgun");
+	}
+	if(n==12){
+		strcat(_month, "Chaitra/main.txt");
+		strcat(name, "Chaitra");
+	}
+	
+	
+	fp = fopen(_month, "r");
+	
+	if(fp != NULL){
+		fread(&mot, sizeof(struct months), 1,fp);
+		printf("\t%s\t\t\t%.3f\t\t%.3f\t\t%.3f\n", name, mot.income, mot.expense, mot.income-mot.expense);
+	}
+}
 
 void generatereport () {
-	int start, end;
+	int start, end,i;
 	
 	system ("cls");
 	reset:
@@ -85,8 +147,14 @@ void generatereport () {
 		goto reset;
 	}
 	else {
-		
+		printf("\n\tSN.\tMonth\t\t\tIncome\t\tExpense\t\tSaving\n\n");
+		for(i = 0; i<=end-start; i++){
+			printf("\t%d", i+1);
+			addRow(start+i);
+		}
 	}
+	getch();
+	choosemonth(1);
 }
 
 void choosemonth (int n) {
