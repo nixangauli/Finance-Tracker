@@ -6,11 +6,13 @@
 #include <windows.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <ctype.h>
 
-char* month;
+char *month;
 char _income[20] = "";
 char month_1[20]= "";
 char _expense[20] = "";
+float TotalSaved = 0;
 
 // structure data for income source name, money and its id //
 struct incomeSources {
@@ -63,6 +65,30 @@ void income (int);
 void expense (int);
 void savings (int);
 
+void generatereport () {
+	int start, end;
+	
+	system ("cls");
+	reset:
+	
+	printf ("\n\n\tHow many months of report would you like?\n\t(1 being Baisakh and 12 being Chaitra)\n");
+	printf ("\n\tEnter Starting Month: ");
+	scanf ("%d", &start);
+	printf ("\n\tEnter Ending Month: ");
+	scanf ("%d", &end);
+	
+	if (start < 1 || end > 12 || start > end || start > 11 || end < 2) {
+		red ();
+		printf ("\n\n\tInvalid Range.\n\tPress Enter to generate again.");
+		white();
+		getch ();
+		goto reset;
+	}
+	else {
+		
+	}
+}
+
 void choosemonth (int n) {
 	
 	
@@ -70,6 +96,10 @@ void choosemonth (int n) {
 	int check;
 	
 	system ("cls");
+	
+	yellow ();
+	printf ("\n\tManage Your Finance\n\n");
+	white ();
 	
 	n==1 ? printf("\t=> "): printf("\t# ");
 	printf ("1. Baisakh\n");
@@ -107,6 +137,12 @@ void choosemonth (int n) {
 	n==12 ? printf("\t=> "): printf("\t# ");
 	printf ("12. Chaitra\n");
 	
+	yellow ();
+	printf ("\n\tReport");
+	white ();
+	n==13 ? printf("\t=> "): printf("\t# ");
+	printf ("a. Generate Report\n");
+	
 	do {
 		ch = getch ();
 		switch (ch) {
@@ -115,8 +151,9 @@ void choosemonth (int n) {
 			break;
 		
 		case 115:
-			n+1 == 13 ? choosemonth (1): choosemonth (n+1);
+			n+1 == 14 ? choosemonth (1): choosemonth (n+1);
 			break;
+		
 		
 		case '\r':
 			switch (n) {
@@ -421,11 +458,14 @@ void choosemonth (int n) {
 						
 				        menu (1);
 					}
-				break;
+					break;
 				
+				case 13:
+					generatereport ();
+					break;
 			}
 			break;
-		
+
 	}	
 	}while (true);
 }
@@ -457,7 +497,6 @@ void updatemonth () {
 }
 
 void getdata () {
-
 
 	FILE *f1;
 	f1 = fopen (month_1, "r");
@@ -560,10 +599,95 @@ void error () {
 			"\t\tEEEEEEEEEEEEEEEEEEEEEE rrrrrrr             rrrrrrr               ooooooooooo    rrrrrrr            \n");
 }
 
+void gettotalsavedamount () {
+	
+	FILE *fp;
+	TotalSaved = 0;
+	fp = fopen ("Baisakh/main.txt", "r");
+	
+	if (fp != NULL) {
+		fread (&mot, sizeof(struct months), 1, fp);
+		TotalSaved += mot.income-mot.expense;
+	}
+	
+	fp = fopen ("Jestha/main.txt", "r");
+	if (fp != NULL) {
+		fread (&mot, sizeof(struct months), 1, fp);
+		TotalSaved += mot.income-mot.expense;
+	}
+	
+	fp = fopen ("Ashar/main.txt", "r");
+	if (fp != NULL) {
+		fread (&mot, sizeof(struct months), 1, fp);
+		TotalSaved += mot.income-mot.expense;
+	}
+	
+	fp = fopen ("Shrawan/main.txt", "r");
+	if (fp != NULL) {
+		fread (&mot, sizeof(struct months), 1, fp);
+		TotalSaved += mot.income-mot.expense;
+	}
+	
+	fp = fopen ("Bhadra/main.txt", "r");
+	if (fp != NULL) {
+		fread (&mot, sizeof(struct months), 1, fp);
+		TotalSaved += mot.income-mot.expense;
+	}
+	
+	fp = fopen ("Ashwin/main.txt", "r");
+	if (fp != NULL) {
+		fread (&mot, sizeof(struct months), 1, fp);
+		TotalSaved += mot.income-mot.expense;
+	}
+	
+	fp = fopen ("Kartik/main.txt", "r");
+	if (fp != NULL) {
+		fread (&mot, sizeof(struct months), 1, fp);
+		TotalSaved += mot.income-mot.expense;
+	}
+	
+	fp = fopen ("Mangsir/main.txt", "r");
+	if (fp != NULL) {
+		fread (&mot, sizeof(struct months), 1, fp);
+		TotalSaved += mot.income-mot.expense;
+	}
+	
+	fp = fopen ("Poush/main.txt", "r");
+	if (fp != NULL) {
+		fread (&mot, sizeof(struct months), 1, fp);
+		TotalSaved += mot.income-mot.expense;
+	}
+	
+	fp = fopen ("Magh/main.txt", "r");
+	if (fp != NULL) {
+		fread (&mot, sizeof(struct months), 1, fp);
+		TotalSaved += mot.income-mot.expense;
+	}
+	
+	fp = fopen ("Falgun/main.txt", "r");
+	if (fp != NULL) {
+		fread (&mot, sizeof(struct months), 1, fp);
+		TotalSaved += mot.income-mot.expense;
+	}
+	
+	fp = fopen ("Chaitra/main.txt", "r");
+	if (fp != NULL) {
+		fread (&mot, sizeof(struct months), 1, fp);
+		TotalSaved += mot.income-mot.expense;
+	}
+	
+	fclose (fp);
+}
+
 void menubar () { 
 	//Total Income and Expense display at top//
+	mot.income = 0;
+	mot.expense = 0;
+	TotalSaved = 0;
+	
 	updatemonth ();
 	getdata ();
+	gettotalsavedamount ();
 	
 	white ();
 	printf ("\tNet Income: ");
@@ -576,13 +700,19 @@ void menubar () {
 	white ();
 	printf ("\n\tSaved Amount: ");
 	cyan ();
-	printf ("%.3f\n\n", mot.income - mot.expense);
+	printf ("%.3f", mot.income - mot.expense);
+	white ();
+	printf ("\t Total Saved Amount: ");
+	cyan ();
+	printf ("%.3f\n\n", TotalSaved);
 	white ();
 }
+
 
 void incomesource () {
 	
 	struct incomeSources temp, temp2;
+	bool validation;
 	
 	system ("cls");	
 	
@@ -601,17 +731,27 @@ void incomesource () {
 	temp.id = 0;
 	
 	while (fread (&temp2, sizeof(struct incomeSources), 1, fin1)) {
-		temp.id = temp2.id;
+		if (strcmp(strlwr(temp.name), strlwr(temp2.name)) != 0) {
+			temp.id = temp2.id;
+		}
+		else {
+			red();
+			printf ("\n\tThis source already exists.\n\tClick Enter to go back.");
+			validation = false;
+			white ();
+		}
 	}
 	
 	temp.id++;
 	
-	fwrite (&temp, sizeof(struct incomeSources), 1, fin);
+	if (validation){
+		fwrite (&temp, sizeof(struct incomeSources), 1, fin);
+		green ();
+		printf ("\n\t Data Successfully stored!\n\t Click Enter to go back.");
+		white ();
+	}
 	
 	fclose (fin);
-	
-	printf ("\n\t Data Successfully stored!\n\t Click Enter to go back.");
-	
 	getch ();
 	
 	income (1);
@@ -1187,9 +1327,6 @@ void menu (int n) {
 			"\t\tM::::::M               M::::::M  ee:::::::::::::e    n::::n    n::::n  uu::::::::uu:::u\n"
 			"\t\tMMMMMMMM               MMMMMMMM    eeeeeeeeeeeeee    nnnnnn    nnnnnn    uuuuuuuu  uuuu\n\n\n");
 	
-	
-	getdata ();
-	
 	menubar ();
 	
 	n==1 ? printf("\t=> "): printf("\t# ");
@@ -1204,22 +1341,23 @@ void menu (int n) {
 	do {
 		ch = getch ();
 		switch (ch) {
-		case 49:
-			menu (1);
-			break;
-		
-		case 50:
-			menu (2);
-			break;
+						
+			case 49:
+				menu (1);
+				break;
 			
-		case 51:
-			menu (3);
-			break;
-		
-		case '\r':
-			n == 1 ? income(1): n == 2 ? expense (1): n == 3 ? savings (1) : error ();
-			break;
-	}	
+			case 50:
+				menu (2);
+				break;
+				
+			case 51:
+				menu (3);
+				break;
+			
+			case '\r':
+				n == 1 ? income(1): n == 2 ? expense (1): n == 3 ? savings (1) : error ();
+				break;	
+		}	
 	}while (1);
 	
 }
