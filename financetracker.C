@@ -35,6 +35,11 @@ struct months {
 	
 }mot;
 
+struct results {
+	float totalExpense;
+	float totalIncome;
+};
+typedef struct results Result;
 struct user{
 	char username[20];
 	char pass[20];
@@ -66,7 +71,8 @@ void expense (int);
 void savings (int);
 void choosemonth(int n);
 
-void addRow(int n){
+Result addRow(int n){
+	Result r1;
 	FILE *fp;
 	char _month[20]="";
 	char name[20]="";
@@ -125,12 +131,20 @@ void addRow(int n){
 	if(fp != NULL){
 		fread(&mot, sizeof(struct months), 1,fp);
 		printf("\t%s\t\t\t%.3f\t%.3f\t%.3f\n", name, mot.income, mot.expense, mot.income-mot.expense);
+		r1.totalExpense = mot.expense;
+		r1.totalIncome = mot.income;
+		return r1;
+	}else{
+		r1.totalExpense = 0;
+		r1.totalIncome = 0;
+		return r1;
 	}
 }
 
 void generatereport () {
 	int start, end,i;
-	
+	Result r2;
+	float totalExpense=0, totalIncome=0;
 	system ("cls");
 	reset:
 	
@@ -153,9 +167,17 @@ void generatereport () {
 		white ();
 		for(i = 0; i<=end-start; i++){
 			printf("\t%d", i+1);
-			addRow(start+i);
+			r2 = addRow(start+i);
+			totalExpense += r2.totalExpense;
+			totalIncome +=r2.totalIncome;
+					
 		}
+		printf("\n\tTotal ");
+		printf("\t\t\t\t%.2f", totalIncome);
+		printf("\t%.2f", totalExpense);
+		printf("\t%.2f", totalIncome - totalExpense);
 	}
+	
 	getch();
 	choosemonth(1);
 }
