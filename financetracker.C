@@ -805,11 +805,22 @@ void menubar () {
 	white ();
 }
 
+int validation (char ch[]) {
+	int len = strlen(ch);
+	bool valid = true;
+	for (int i=0; i < len; i++) {
+		if (!isdigit(ch[i])) {
+			valid = false;
+		}
+	}
+	return valid;
+}
 
 void incomesource () {
-	
+	char ch[20];
 	struct incomeSources temp, temp2;
-	bool validation;
+	bool valid;
+	int check;
 	
 	system ("cls");	
 	
@@ -823,7 +834,16 @@ void incomesource () {
 	scanf ("%s", &temp.name);
 	
 	printf ("\n\tEnter Amount: ");
-	scanf ("%f", &temp.monay);
+	scanf ("%s", &ch);
+			
+			check = validation(ch);
+			if (!check) {
+				red ();
+				printf ("\n\tINVALID Amount. Please add real amount.");
+				white ();
+				return;
+			}
+			sscanf (ch, "%f", &temp.monay);
 	
 	temp.id = 0;
 	
@@ -834,20 +854,20 @@ void incomesource () {
 		else {
 			red();
 			printf ("\n\tThis source already exists.\n\tClick Enter to go back.");
-			validation = false;
+			valid = false;
 			white ();
 		}
 	}
 	
 	temp.id++;
 	
-	if (validation){
+	if (valid){
 		fwrite (&temp, sizeof(struct incomeSources), 1, fin);
 		green ();
 		printf ("\n\t Data Successfully stored!\n\t Click Enter to go back.");
 		white ();
 	}
-	
+	fclose (fin1);
 	fclose (fin);
 	getch ();
 	
@@ -855,9 +875,9 @@ void incomesource () {
 }
 
 void editincomesource () {
-	
+	char ch [20];
 	struct incomeSources temp;
-	int id;
+	int id, check;
 	
 	FILE *fin, *fin1;
 	fin = fopen (_income, "r");
@@ -883,7 +903,9 @@ void editincomesource () {
 			
 			//Shows the existing data//
 			printf("\n\tID: \t%d\n\tSource: \t%s\n\tAmount: \t%f", temp.id, temp.name, temp.monay);
+			blue ();
 			printf ("\n\n\n\tEnter New Data:\n");
+			white ();
 			
 			//Enter New Source Name//
 			printf ("\n\tEnter new Name: ");
@@ -891,7 +913,16 @@ void editincomesource () {
 			
 			//Enter New Source Amount//
 			printf ("\n\tEnter new Amount: ");
-			scanf ("%f", &temp.monay);
+			scanf ("%s", &ch);
+			
+			check = validation(ch);
+			if (!check) {
+				red ();
+				printf ("\n\tINVALID Amount. Please add real amount.");
+				white ();
+				return;
+			}
+			sscanf (ch, "%f", &temp.monay);
 		}
 
 		//Writes the new data from if and existing data from temp variable to temp file//
@@ -914,8 +945,9 @@ void editincomesource () {
 }
 
 void addincomeamount () {
+	char ch[20];
 	struct incomeSources temp;
-	int id;
+	int id, check;
 	float addmonay;
 	
 	FILE *fin, *fin1;
@@ -942,11 +974,22 @@ void addincomeamount () {
 			
 			//Shows the existing data//
 			printf("\n\tID: \t%d\n\tSource: \t%s\n\tAmount: \t%f", temp.id, temp.name, temp.monay);
+			blue ();
 			printf ("\n\n\n\tEnter New Data:\n");
+			white ();
 			
 			//Enter additional Amount//
 			printf ("\n\tEnter Amount: ");
-			scanf ("%f", &addmonay);
+			scanf ("%s", &ch);
+			
+			check = validation(ch);
+			if (!check) {
+				red ();
+				printf ("\n\tINVALID Amount. Please add real amount.");
+				white ();
+				return;
+			}
+			sscanf (ch, "%f", &addmonay);
 			
 			temp.monay += addmonay;
 		}
@@ -1021,8 +1064,10 @@ void deleteincomesource () {
 }
 
 void expensesource () {
-	
+	char ch[20];
 	struct expenseSources temp, temp2;
+	int check;
+	bool valid;
 	
 	system ("cls");	
 	
@@ -1036,30 +1081,51 @@ void expensesource () {
 	scanf ("%s", &temp.name);
 	
 	printf ("\n\tEnter Amount: ");
-	scanf ("%f", &temp.monay);
+	scanf ("%s", &ch);
+
+	check = validation(ch);
+	if (!check) {
+		red ();
+		printf ("\n\tINVALID Amount. Please add real amount.");
+		white ();
+		return;
+	}
+	sscanf (ch, "%f", &temp.monay);
 	
 	temp.id = 0;
 	
 	while (fread (&temp2, sizeof(struct expenseSources), 1, fex1)) {
-		temp.id = temp2.id;
+		if (strcmp(strlwr(temp.name), strlwr(temp2.name)) != 0) {
+			temp.id = temp2.id;
+		}
+		else {
+			red();
+			printf ("\n\tThis source already exists.\n\tClick Enter to go back.");
+			valid = false;
+			white ();
+		}
 	}
 	
 	temp.id++;
 	
-	fwrite (&temp, sizeof(struct expenseSources), 1, fex);
+	if (valid){
+		fwrite (&temp, sizeof(struct expenseSources), 1, fex);
+		green ();
+		printf ("\n\t Data Successfully stored!\n\t Click Enter to go back.");
+		white ();
+	}
+	fclose (fex1);
 	fclose (fex);
-	
-	printf ("\n\t Data Successfully stored!\n\t Click Enter to go back.");
-	
 	getch ();
 	
 	expense (1);
 }
 
 void editexpensesource () {
-	
+	char ch[20];
 	struct expenseSources temp;
 	int id;
+	int check;
 	
 	FILE *fex, *fex1;
 	fex = fopen (_expense, "r");
@@ -1093,7 +1159,16 @@ void editexpensesource () {
 			
 			//Enter New Source Amount//
 			printf ("\n\tEnter new Amount: ");
-			scanf ("%f", &temp.monay);
+			scanf ("%s", &ch);
+			
+			check = validation(ch);
+			if (!check) {
+				red ();
+				printf ("\n\tINVALID Amount. Please add real amount.");
+				white ();
+				return;
+			}
+			sscanf (ch, "%f", &temp.monay);
 		}
 
 		//Writes the new data from if and existing data from temp variable to temp file//
@@ -1116,8 +1191,10 @@ void editexpensesource () {
 }
 
 void addexpenseamount () {
+	char ch[20];
 	struct expenseSources temp;
 	int id;
+	int check;
 	float addmonay;
 	
 	FILE *fex, *fex1;
@@ -1144,11 +1221,22 @@ void addexpenseamount () {
 			
 			//Shows the existing data//
 			printf("\n\tID: \t%d\n\tSource: \t%s\n\tAmount: \t%f", temp.id, temp.name, temp.monay);
+			blue ();
 			printf ("\n\n\n\tEnter New Data:\n");
+			white ();
 			
 			//Enter additional Amount//
 			printf ("\n\tEnter Amount: ");
-			scanf ("%f", &addmonay);
+			scanf ("%s", &ch);
+			
+			check = validation(ch);
+			if (!check) {
+				red ();
+				printf ("\n\tINVALID Amount. Please add real amount.");
+				white ();
+				return;
+			}
+			sscanf (ch, "%f", &addmonay);
 			
 			temp.monay += addmonay;
 		}
@@ -1380,33 +1468,6 @@ void expense (int n) {
 	
 }
 
-//Inside Savings Menu//
-void savings (int n) {
-	char ch;
-	
-	system ("cls");
-	
-	menubar ();
-	
-	n==1 ? printf("\t=> "): printf("\t# ");
-	printf ("1. Add your Wishlist\n");
-	
-	do {
-		ch = getch ();
-		switch (ch) {
-		
-		case 49:
-			savings(1);
-			break;
-			
-		case 27:
-			menu(1);
-			break;
-	}	
-	}while (true);
-}
-
-
 
 //Homescreen / Menu Screen//
 void menu (int n) {
@@ -1440,9 +1501,6 @@ void menu (int n) {
 	n==2 ? printf("\t=> "): printf("\t# ");
 	printf ("2. Expense\n");
 	
-	n==3 ? printf("\t=> "): printf("\t# ");
-	printf ("3. Savings\n");
-	
 	blue ();
 	printf ("\n\n\n\tUse the numbers respective to the action to navigate.");
 	white();
@@ -1458,13 +1516,9 @@ void menu (int n) {
 			case 50:
 				menu (2);
 				break;
-				
-			case 51:
-				menu (3);
-				break;
 			
 			case '\r':
-				n == 1 ? income(1): n == 2 ? expense (1): n == 3 ? savings (1) : error ();
+				n == 1 ? income(1): n == 2 ? expense (1): error ();
 				break;	
 		}	
 	}while (1);
