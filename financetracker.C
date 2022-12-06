@@ -31,19 +31,26 @@ struct expenseSources {
 struct months {
 	float expense;
 	float income;
-	float saving;
-	
+	float spendinglimit;
 }mot;
 
 struct results {
 	float totalExpense;
 	float totalIncome;
 };
+
 typedef struct results Result;
 struct user{
 	char username[20];
 	char pass[20];
 }usr,usr1;
+
+//define Empty struct
+//static const struct incomeSources Ein;
+//static const struct expenseSources Eex;
+//static const struct months Emonth;
+//static const struct results Eresult;
+//static const struct user Euser;
 
 // Color Coding //
 void red () {
@@ -68,8 +75,41 @@ printf("\033[0;37m");
 void menu (int);
 void income (int);
 void expense (int);
-void savings (int);
 void choosemonth(int n);
+
+int getarrow () {
+	int chr1, chr2;
+	chr1 = getch();
+	if (chr1 == 27) {
+		return 27;
+	}
+	else if (chr1 == 0xE0) { //to check scroll key interrupt
+	  	chr2 = getch();  //to read arrow key
+	  	switch(chr2) {
+		    case 72: return 1; //UP arrow
+		      	break;
+		    case 80: return 2; //DOWN arrow
+		      	break;
+		    case 75: return 3; //LEFT arrow
+		      	break;
+		    case 77: return 4; //RIGHT arrow
+		      	break;
+		    default: return 0;
+		    	break;
+	  };
+	}
+}
+
+void resetvariable () {
+	memset (_income, '\0', sizeof (_income));
+	memset (month_1, '\0', sizeof (month_1));
+	memset (_expense, '\0', sizeof (_expense));
+	memset (&in, 0, sizeof (in));
+	memset (&ex, 0, sizeof (ex));
+	memset (&mot, 0, sizeof (mot));
+	memset (&usr, 0, sizeof (usr));
+	memset (&usr1, 0, sizeof (usr1));
+}
 
 Result addRow(int n){
 	Result r1;
@@ -184,8 +224,7 @@ void generatereport () {
 
 void choosemonth (int n) {
 	
-	
-	char ch;
+	int ch;
 	int check;
 	
 	system ("cls");
@@ -231,26 +270,25 @@ void choosemonth (int n) {
 	printf ("12. Chaitra\n");
 	
 	yellow ();
-	printf ("\n\tReport");
+	printf ("\n\tReport\n");
 	white ();
 	n==13 ? printf("\t=> "): printf("\t# ");
 	printf ("a. Generate Report\n");
 	
 	blue ();
-	printf ("\n\n\n\tUse W or S button to navigate up or down respectively.");
+	printf ("\n\n\n\tUse Arrow key to navigate.");
 	white();
 	
 	do {
-		ch = getch ();
+		ch = getarrow ();
 		switch (ch) {
-		case 119:
+		case 1:
 			n-1 == 0 ? choosemonth (13): choosemonth (n-1);
 			break;
 		
-		case 115:
+		case 2:
 			n+1 == 14 ? choosemonth (1): choosemonth (n+1);
 			break;
-		
 		
 		case '\r':
 			switch (n) {
@@ -597,14 +635,14 @@ void getdata () {
 
 	FILE *f1;
 	f1 = fopen (month_1, "r");
-	
+
 	if (f1 == NULL) {
 		fclose (f1);
 		
 		f1 = fopen (month_1, "w");
 		mot.expense = 0; 
 		mot.income = 0;
-		mot.saving = 0;
+		mot.spendinglimit = 0;
 		
 		fwrite (&mot, sizeof(struct months), 1, f1);
 		
@@ -781,28 +819,48 @@ void menubar () {
 	mot.income = 0;
 	mot.expense = 0;
 	TotalSaved = 0;
+	mot.spendinglimit = 0;
 	
 	updatemonth ();
-	getdata ();
 	gettotalsavedamount ();
+	getdata ();
 	
 	white ();
 	printf ("\tNet Income: ");
 	green ();
-	printf ("%.3f", mot.income);
+	printf ("%.2f", mot.income);
 	white ();
-	printf ("\tNet Expense: ");
+	printf ("\t\tNet Expense: ");
 	red ();
-	printf ("%.3f", mot.expense);
+	printf ("%.2f", mot.expense);
 	white ();
 	printf ("\n\tSaved Amount: ");
 	cyan ();
-	printf ("%.3f", mot.income - mot.expense);
+	printf ("%.2f", mot.income - mot.expense);
 	white ();
-	printf ("\t Total Saved Amount: ");
+	printf ("\t\tTotal Saved Amount: ");
 	cyan ();
-	printf ("%.3f\n\n", TotalSaved);
+	printf ("%.2f", TotalSaved);
 	white ();
+	printf ("\t\tSpending Limit: ");
+	cyan ();
+	printf ("%.2f", mot.spendinglimit);
+	white ();
+	
+	if (mot.spendinglimit != 0) {
+		if (mot.spendinglimit < mot.expense) {
+			red ();
+			printf ("\n\n\tYou have exceeded your spending limit!");
+		}
+		else if (0.75 * mot.spendinglimit < mot.spendinglimit){
+			yellow ();
+			printf ("You are getting close to the limit!");
+		}
+		printf ("\n\n");
+	}
+	else {
+		printf ("\n\n");
+	}
 }
 
 int validation (char ch[]) {
@@ -814,6 +872,50 @@ int validation (char ch[]) {
 		}
 	}
 	return valid;
+}
+
+// A user set value to limit the spending of user //
+void spendingLimit () {
+	float sp;
+	int check;
+	char ch [20];
+	
+	FILE *fp, *f1;
+	fp = fopen (month_1, "r");
+	
+	fread (&mot, sizeof (struct months), 1, fp);
+	
+	system ("cls");
+	printf ("\n\n\tCurrent Spending Limit: %.2f", mot.spendinglimit);
+	printf ("\n\n\tEnter new Spending Limit: ");
+//	scanf ("%s", &ch);
+			
+//	check = validation(ch);
+//	if (!check) {
+//		red ();
+//		printf ("\n\tINVALID Amount. Please add real amount.");
+//		white ();
+//		return;
+//	}
+//	sscanf (ch, "%f", &mot.spendinglimit);
+	scanf ("%f", &sp);
+	fclose (fp);
+	mot.spendinglimit = sp;
+	
+	f1 = fopen (month_1, "w");
+	if (fwrite (&mot, sizeof (struct months), 1, f1)) {
+		printf ("SUCCEFFULL");
+		printf ("%f", mot.spendinglimit);
+	}
+	fclose (fp);
+	fclose (f1);
+	
+	yellow ();
+	printf ("\n\n\tSuccessfully Created Limit.\n\tPress Enter to go back.");
+	getch ();
+
+	menu (1);
+	
 }
 
 void incomesource () {
@@ -1315,7 +1417,7 @@ void deleteexpensesource () {
 //Inside Income Menu//
 void income (int n) {
 	
-	char ch;
+	int ch;
 	struct incomeSources temp;
 	int loop = 1;
 	
@@ -1355,31 +1457,23 @@ void income (int n) {
 	printf ("4. Delete source \n");
 	
 	blue ();
-	printf ("\n\n\n\tUse the numbers respective to the action to navigate.");
+	printf ("\n\n\n\tUse the Arrow key to navigate.");
 	white();
 	
 	do {
-		ch = getch ();
+		ch = getarrow ();
+		fflush (stdin);
 		switch (ch) {
-		
 			case 27:
-				menu(1);
+				menu (1);
 				break;
 				
-			case 49:
-				income (1);
+			case 1:
+				n-1 == 0 ? income (4): income (n-1);
 				break;
-			
-			case 50:
-				income (2);
-				break;
-			
-			case 51:
-				income (3);
-				break;
-			
-			case 52:
-				income (4);
+		
+			case 2:
+				n+1 == 5 ? income (1): income (n+1);
 				break;
 			
 			case '\r':
@@ -1392,7 +1486,7 @@ void income (int n) {
 //Inside Expense Menu//
 void expense (int n) {
 	
-	char ch;
+	int ch;
 	struct expenseSources temp;
 	int loop = 1;
 	
@@ -1433,31 +1527,23 @@ void expense (int n) {
 	printf ("4. Delete source \n");
 	
 	blue ();
-	printf ("\n\n\n\tUse the numbers respective to the action to navigate.");
+	printf ("\n\n\n\tUse the Arrow keys to navigate.");
 	white();
 	
 	do {
-		ch = getch ();
+		ch = getarrow ();
+		fflush (stdin);
 		switch (ch) {
-		
 			case 27:
-				menu(1);
+				menu (1);
 				break;
 				
-			case 49:
-				expense (1);
+			case 1:
+				n-1 == 0 ? expense (4): expense (n-1);
 				break;
-			
-			case 50:
-				expense (2);
-				break;
-			
-			case 51:
-				expense (3);
-				break;
-			
-			case 52:
-				expense (4);
+		
+			case 2:
+				n+1 == 5 ? expense (1): expense (n+1);
 				break;
 			
 			case '\r':
@@ -1471,10 +1557,8 @@ void expense (int n) {
 
 //Homescreen / Menu Screen//
 void menu (int n) {
-	
+	int ch;
 	system ("cls");
-	
-	char ch;
 	printf ("\n\n\t\t"
 			"MMMMMMMM               MMMMMMMM                                                        \n"
 			"\t\tM:::::::M             M:::::::M                                                        \n"
@@ -1501,34 +1585,40 @@ void menu (int n) {
 	n==2 ? printf("\t=> "): printf("\t# ");
 	printf ("2. Expense\n");
 	
+	yellow ();
+	n==3 ? printf("\t=> "): printf("\t# ");
+	printf ("3. Set Spending Limit\n");
+	white ();
+	
 	blue ();
-	printf ("\n\n\n\tUse the numbers respective to the action to navigate.");
+	printf ("\n\n\n\tUse the Arrow keys to navigate.");
 	white();
 	
 	do {
-		ch = getch ();
+		ch = getarrow ();
+		fflush (stdin);
 		switch (ch) {
-						
-			case 49:
-				menu (1);
+			case 27:
+				resetvariable ();
+				choosemonth (1);
 				break;
-			
-			case 50:
-				menu (2);
+				
+			case 1:
+				n-1 == 0 ? menu (3): menu (n-1);
+				break;
+		
+			case 2:
+				n+1 == 4 ? menu (1): menu (n+1);
 				break;
 			
 			case '\r':
-				n == 1 ? income(1): n == 2 ? expense (1): error ();
+				n == 1 ? income(1): n == 2 ? expense (1): n == 3 ? spendingLimit () : error ();
 				break;	
 		}	
 	}while (1);
 	
 }
 
-// A user set value to limit the spending of user //
-void spendinglimit () {
-	
-}
 
 int requestLogin(){
 	char ch;
