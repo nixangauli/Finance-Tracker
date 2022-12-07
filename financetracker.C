@@ -612,10 +612,15 @@ void updatemonth () {
 	
 	f1 = fopen (_income, "r");
 	f2 = fopen (_expense, "r");
-	f3 = fopen (month_1, "w");
+	f3 = fopen (month_1, "r");
+	
+	fread (&mot, sizeof (struct months), 1, f3);
+	fclose (f3);
 	
 	mot.income = 0;  // resets income data in menubar //
 	mot.expense = 0;  // resets expense data in menubar //
+	
+	f3 = fopen (month_1, "w");
 	
 	while (fread (&temp, sizeof(struct incomeSources), 1, f1)) {
 		mot.income += temp.monay;
@@ -701,16 +706,8 @@ void animatestring (char text[100]) {
 			case 6:
 				printf ("\\");
 				break;
-				
-			case 7:
-				printf ("\\");
-				break;
-				
-			case 8:
-				printf ("|");
-				break;
 		}
-		Sleep (100);
+		Sleep (50);
 	}
 }
 
@@ -848,13 +845,15 @@ void menubar () {
 	white ();
 	
 	if (mot.spendinglimit != 0) {
-		if (mot.spendinglimit < mot.expense) {
+		if (mot.spendinglimit <= mot.expense) {
 			red ();
 			printf ("\n\n\tYou have exceeded your spending limit!");
+			white ();
 		}
-		else if (0.75 * mot.spendinglimit < mot.spendinglimit){
+		else if (0.75 * mot.spendinglimit <= mot.expense){
 			yellow ();
-			printf ("You are getting close to the limit!");
+			printf ("\n\n\tYou are getting close to the limit!");
+			white ();
 		}
 		printf ("\n\n");
 	}
@@ -876,7 +875,7 @@ int validation (char ch[]) {
 
 // A user set value to limit the spending of user //
 void spendingLimit () {
-	float sp;
+
 	int check;
 	char ch [20];
 	
@@ -888,26 +887,22 @@ void spendingLimit () {
 	system ("cls");
 	printf ("\n\n\tCurrent Spending Limit: %.2f", mot.spendinglimit);
 	printf ("\n\n\tEnter new Spending Limit: ");
-//	scanf ("%s", &ch);
+	scanf ("%s", &ch);
 			
-//	check = validation(ch);
-//	if (!check) {
-//		red ();
-//		printf ("\n\tINVALID Amount. Please add real amount.");
-//		white ();
-//		return;
-//	}
-//	sscanf (ch, "%f", &mot.spendinglimit);
-	scanf ("%f", &sp);
+	check = validation(ch);
+	if (!check) {
+		red ();
+		printf ("\n\tINVALID Amount. Please add real amount.");
+		white ();
+		return;
+	}
+	sscanf (ch, "%f", &mot.spendinglimit);
+
 	fclose (fp);
-	mot.spendinglimit = sp;
 	
 	f1 = fopen (month_1, "w");
-	if (fwrite (&mot, sizeof (struct months), 1, f1)) {
-		printf ("SUCCEFFULL");
-		printf ("%f", mot.spendinglimit);
-	}
-	fclose (fp);
+	fwrite (&mot, sizeof (struct months), 1, f1);
+	
 	fclose (f1);
 	
 	yellow ();
@@ -987,8 +982,12 @@ void editincomesource () {
 	
 	system ("cls");
 	
+	yellow ();
+	printf ("\n\tItem\tSource\t\tAmount\n");
+	white ();
+	
 	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
-		printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
+		printf ("\n\t%3d. %10s :%15.2f\n", temp.id, temp.name, temp.monay);	
 	}
 	
 	fclose (fin);
@@ -1058,8 +1057,12 @@ void addincomeamount () {
 	
 	system ("cls");
 	
+	yellow ();
+	printf ("\n\tItem\tSource\t\tAmount\n");
+	white ();
+	
 	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
-		printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
+		printf ("\n\t%3d. %10s :%15.2f\n", temp.id, temp.name, temp.monay);	
 	}
 	
 	fclose (fin);
@@ -1125,8 +1128,12 @@ void deleteincomesource () {
 	
 	system ("cls");
 	
+	yellow ();
+	printf ("\n\tItem\tSource\t\tAmount\n");
+	white ();
+	
 	while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
-		printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
+		printf ("\n\t%3d. %10s :%15.2f\n", temp.id, temp.name, temp.monay);	
 	}
 	
 	fclose (fin);
@@ -1235,8 +1242,12 @@ void editexpensesource () {
 	
 	system ("cls");
 	
+	yellow ();
+	printf ("\n\tItem\tSource\t\tAmount\n");
+	white ();
+	
 	while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {		
-		printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
+		printf ("\n\t%3d. %10s :%15.2f\n", temp.id, temp.name, temp.monay);	
 	}
 	
 	fclose (fex);
@@ -1305,8 +1316,12 @@ void addexpenseamount () {
 	
 	system ("cls");
 	
+	yellow ();
+	printf ("\n\tItem\tSource\t\tAmount\n");
+	white ();
+	
 	while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {		
-		printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
+		printf ("\n\t%3d. %10s :%15.2f\n", temp.id, temp.name, temp.monay);	
 	}
 	
 	fclose (fex);
@@ -1373,8 +1388,12 @@ void deleteexpensesource () {
 	
 	system ("cls");
 	
+	yellow ();
+	printf ("\n\tItem\tSource\t\tAmount\n");
+	white ();
+	
 	while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {		
-		printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
+		printf ("\n\t%3d. %10s :%15.2f\n", temp.id, temp.name, temp.monay);	
 	}
 	
 	fclose (fex);
@@ -1424,6 +1443,9 @@ void income (int n) {
 	system ("cls");
 	
 	menubar ();
+	yellow ();
+	printf ("\n\tItem\tSource\t\tAmount\n");
+	white ();
 	
 	FILE *fin;
 	fin = fopen (_income, "r");
@@ -1436,7 +1458,7 @@ void income (int n) {
 	
 	else {
 		while (fread (&temp, sizeof(struct incomeSources), 1, fin)) {		
-			printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);
+			printf ("\n\t%3d. %10s :%15.2f\n", temp.id, temp.name, temp.monay);
 			
 		}
 		
@@ -1494,6 +1516,10 @@ void expense (int n) {
 	
 	menubar ();
 	
+	yellow ();
+	printf ("\n\tItem\tSource\t\tAmount\n");
+	white ();
+	
 	FILE *fex;
 	fex = fopen (_expense, "r");
 	if (fex == NULL) {
@@ -1506,7 +1532,7 @@ void expense (int n) {
 	else {
 		while (fread (&temp, sizeof(struct expenseSources), 1, fex)) {
 			
-			printf ("\n\t%d. %s :\t%.3f\n", temp.id, temp.name, temp.monay);	
+			printf ("\n\t%3d. %10s :%15.2f\n", temp.id, temp.name, temp.monay);	
 			
 		}
 		
